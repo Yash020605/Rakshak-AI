@@ -11,7 +11,7 @@
 
 **One tap. Simultaneous SMS to family + live alert to emergency responders.**
 
-[Live Dashboard →](https://rakshak-ai-backend.onrender.com/dashboard) &nbsp;·&nbsp; [View Demo](#-demo) &nbsp;·&nbsp; [Architecture](#-architecture)
+[Live Dashboard →](https://rakshak-ai-a4f2.onrender.com/dashboard) &nbsp;·&nbsp; [View Demo](#-demo) &nbsp;·&nbsp; [Architecture](#-architecture)
 
 </div>
 
@@ -202,6 +202,9 @@ Rakshak-AI/
 ## ☁️ Deployment
 
 The backend is ready to deploy on [Render](https://render.com) (free tier) using the included `render.yaml`.
+
+🌐 **Live:** https://rakshak-ai-a4f2.onrender.com  
+🖥️ **Dashboard:** https://rakshak-ai-a4f2.onrender.com/dashboard
 
 See **[DEPLOY.md](./DEPLOY.md)** for the full step-by-step guide.
 
