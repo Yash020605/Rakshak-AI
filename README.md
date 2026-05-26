@@ -1,334 +1,253 @@
-# 🚨 Rakshak AI - Emergency Alert System
+<div align="center">
 
-**Status:** 🟡 85% Complete - Ready for Testing  
-**Last Updated:** May 19, 2026 - 4:15 PM
+# 🚨 Rakshak AI
+### Real-Time Emergency Alert System
 
----
+[![Node.js](https://img.shields.io/badge/Node.js-20-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
+[![React Native](https://img.shields.io/badge/React_Native-0.74-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactnative.dev)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://mongodb.com)
+[![Socket.IO](https://img.shields.io/badge/Socket.IO-4.7-010101?style=for-the-badge&logo=socket.io&logoColor=white)](https://socket.io)
+[![Twilio](https://img.shields.io/badge/Twilio-SMS-F22F46?style=for-the-badge&logo=twilio&logoColor=white)](https://twilio.com)
 
-## 📊 Quick Status
+**One tap. Simultaneous SMS to family + live alert to emergency responders.**
 
-```
-✅ Backend Server:     RUNNING (Port 5000)
-⚠️ MongoDB:           NOT CONNECTED (optional)
-✅ Mobile App:        CODE COMPLETE
-✅ SMS Alerts:        CONFIGURED
-✅ Location Tracking: WORKING
-✅ Real-time Updates: WORKING
-⏳ Testing:           PENDING
-```
+[Live Dashboard →](https://rakshak-ai-backend.onrender.com/dashboard) &nbsp;·&nbsp; [View Demo](#-demo) &nbsp;·&nbsp; [Architecture](#-architecture)
+
+</div>
 
 ---
 
-## 🚀 Quick Start
+## 🎯 What is Rakshak AI?
 
-### 1. Backend is Already Running ✅
-```bash
-# Backend running on http://localhost:5000
-# Health check: curl http://localhost:5000/health
-```
+Rakshak AI is a full-stack emergency response platform built for real-world safety scenarios. When a user triggers an SOS, the system simultaneously:
 
-### 2. Test Mobile App (Choose One)
+- 📱 **Sends SMS** to all emergency contacts via Twilio (works offline too)
+- 🗺️ **Alerts nearby responders** in real-time via WebSocket
+- 📍 **Streams live location** to a responder dashboard with routing and ETA
+- 🔄 **Syncs status back** to the user's phone when help is dispatched
 
-#### Option A: Android Emulator (Fastest)
-```bash
-cd mobile
-npx react-native run-android
-```
-
-#### Option B: Physical Device
-1. Find your computer's IP: `ipconfig`
-2. Edit `mobile/src/config/network.js`:
-   ```javascript
-   const USE_LOCAL_IP = true;
-   const LOCAL_IP = '192.168.1.100'; // Your IP
-   ```
-3. Run: `npx react-native run-android`
+No API key needed for maps — uses 100% free OpenStreetMap + OSRM routing.
 
 ---
 
-## 📚 Documentation
+## ✨ Key Features
 
-| Document | Purpose | Read Time |
-|----------|---------|-----------|
-| **QUICK_START.md** | Get testing in 5 minutes | 3 min |
-| **STATUS_SUMMARY.md** | High-level overview | 5 min |
-| **DEBUG_REPORT.md** | Complete technical analysis | 10 min |
-| **SETUP_GUIDE.md** | Configuration & troubleshooting | 15 min |
-
-**👉 Start with `QUICK_START.md` to begin testing immediately!**
-
----
-
-## ✅ What's Working
-
-### Core Features (100%)
-- ✅ Emergency SOS buttons (Medical, Fire, Police)
-- ✅ SMS emergency notifications
-- ✅ Live location tracking
-- ✅ Real-time map display
-- ✅ Profile management (local storage)
-- ✅ Offline fallback mode
-- ✅ Camera/media capture
-- ✅ Permission handling
-
-### Backend (85%)
-- ✅ Express REST API
-- ✅ Socket.IO real-time communication
-- ✅ Location caching (in-memory)
-- ✅ Twilio SMS integration
-- ✅ File upload system
-- ⚠️ MongoDB (needs connection)
-
-### Mobile (95%)
-- ✅ React Native app
-- ✅ All screens implemented
-- ✅ Network auto-detection
-- ✅ Error handling
-- ⏳ Runtime testing pending
-
----
-
-## ⚠️ Known Issues
-
-### 1. MongoDB Connection Failed
-**Impact:** Medium (app works without it)  
-**Status:** Needs user action  
-**Fix Time:** 5-15 minutes
-
-**What doesn't work:**
-- Profile sync to server
-- Alert history
-- Media metadata storage
-
-**What still works:**
-- Everything else! (SMS, location, real-time, local storage)
-
-**How to fix:** See `SETUP_GUIDE.md` Section: "MongoDB Connection Failure"
-
----
-
-## 🐛 Bugs Fixed
-
-During debugging, the following critical issues were identified and resolved:
-
-1. ✅ **Missing Media Model** - Created `backend/models/Media.js`
-2. ✅ **Missing Firebase Config** - Created graceful fallback
-3. ✅ **Hardcoded localhost** - Smart network detection added
-4. ✅ **Error Handling** - Server continues despite MongoDB failure
-
----
-
-## 🧪 Testing
-
-### Backend Tests
-```bash
-cd backend
-node test-api.js
-```
-
-### Manual API Tests
-```bash
-# Health check
-curl http://localhost:5000/health
-
-# Location update
-curl -X POST http://localhost:5000/api/location/update \
-  -H "Content-Type: application/json" \
-  -d '{"userId":"test","latitude":19.0760,"longitude":72.8777}'
-
-# Get location
-curl http://localhost:5000/api/location/live/test
-```
-
-### Mobile App Testing
-See `QUICK_START.md` for complete testing checklist.
+| Feature | Description |
+|---------|-------------|
+| 🆘 **Dual-Routing SOS** | One tap triggers SMS to family AND WebSocket alert to responders — simultaneously |
+| 📡 **Real-Time Dashboard** | Live map with color-coded emergency pins, patient details, dispatch controls |
+| 🗺️ **Live Route Tracking** | Responder's GPS streams to victim's phone with turn-by-turn ETA |
+| 📴 **Offline Fallback** | No internet? App opens native SMS with pre-filled emergency message |
+| 🏥 **Patient Profile Snapshot** | Blood group, medical conditions, prescriptions attached to every alert |
+| 📸 **Media Upload** | Photo/video evidence captured and linked to the alert |
+| 🔒 **Dashboard Auth** | HTTP Basic Auth protects the responder dashboard |
 
 ---
 
 ## 🏗️ Architecture
 
-### Backend Stack
-- **Runtime:** Node.js
-- **Framework:** Express.js
-- **Database:** MongoDB (optional)
-- **Real-time:** Socket.IO
-- **SMS:** Twilio
-- **Storage:** Multer (file uploads)
-- **Cache:** node-cache (in-memory)
+```
+┌─────────────────────────────────────────────────────────┐
+│                    Mobile App (React Native)             │
+│         Home ──► Map ──► Profile                        │
+└──────────────────────┬──────────────────────────────────┘
+                       │  POST /api/alert/sos
+                       ▼
+┌─────────────────────────────────────────────────────────┐
+│              Backend  (Node.js + Express)                │
+│                                                         │
+│   ┌─────────────────┐    ┌──────────────────────────┐  │
+│   │  Route A: SMS   │    │  Route B: WebSocket      │  │
+│   │  Twilio → all   │    │  Socket.IO → Dashboard   │  │
+│   │  family contacts│    │  + nearby responders     │  │
+│   └─────────────────┘    └──────────────────────────┘  │
+│                                                         │
+│   MongoDB Atlas · node-cache · Multer · OSRM routing   │
+└─────────────────────────────────────────────────────────┘
+                       │
+                       ▼
+┌─────────────────────────────────────────────────────────┐
+│           Responder Dashboard  (Vanilla JS + Leaflet)   │
+│   Live map · Alert list · Dispatch · Live route ETA     │
+└─────────────────────────────────────────────────────────┘
+```
 
-### Mobile Stack
-- **Framework:** React Native
-- **Navigation:** React Navigation
-- **Maps:** react-native-maps (OpenStreetMap)
-- **Location:** react-native-geolocation-service
-- **Storage:** AsyncStorage
-- **Camera:** react-native-image-picker
-- **Network:** axios, socket.io-client
+---
+
+## 🛠️ Tech Stack
+
+**Backend**
+- Node.js + Express — REST API + static dashboard serving
+- Socket.IO — bidirectional real-time communication
+- MongoDB + Mongoose — alert and profile persistence
+- Twilio — SMS to emergency contacts
+- Multer — photo/prescription file uploads
+- OpenStreetMap (Overpass API) — nearest hospital/fire/police lookup
+- OSRM — free turn-by-turn routing with ETA
+
+**Mobile**
+- React Native 0.74 (bare, no Expo)
+- React Navigation — stack navigation
+- react-native-maps — live OSM map tiles
+- react-native-geolocation-service — high-accuracy GPS
+- Socket.IO client — real-time responder location updates
+- AsyncStorage — offline profile persistence
+
+**Dashboard**
+- Vanilla JS + Leaflet.js — zero-dependency, fast load
+- Socket.IO client — live alert feed
+- Browser Geolocation API — streams responder GPS to victim
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+
+- MongoDB Atlas free cluster ([get one here](https://cloud.mongodb.com))
+- Twilio account ([free trial](https://twilio.com))
+
+### 1. Clone & install
+
+```bash
+git clone https://github.com/Yash020605/Rakshak-AI.git
+cd Rakshak-AI/backend
+npm install
+```
+
+### 2. Configure environment
+
+```bash
+cp .env.example .env
+# Fill in MONGODB_URI, TWILIO_*, DASHBOARD_USER, DASHBOARD_PASS
+```
+
+### 3. Run the backend
+
+```bash
+node server.js
+# ✅ MongoDB connected successfully
+# ✅ Rakshak AI backend running on http://0.0.0.0:5000
+```
+
+### 4. Open the dashboard
+
+```
+http://localhost:5000/dashboard
+```
+
+### 5. Run the mobile app
+
+```bash
+cd ../mobile-native
+npm install
+npx react-native run-android   # Android device/emulator
+```
+
+---
+
+## 📱 Demo
+
+### SOS Flow
+1. User opens app → taps **🚑 Medical Emergency**
+2. App sends GPS + profile to backend
+3. Backend simultaneously:
+   - Fires Twilio SMS to all emergency contacts
+   - Emits `new-alert` via Socket.IO to dashboard
+4. Responder sees alert on map, clicks **Accept & Dispatch**
+5. User's phone shows **"Help is on the way — Ambulance Unit 3"**
+6. Dashboard streams responder's live GPS → user's map shows moving marker + ETA
+
+### Test with curl
+
+```bash
+# Trigger a test SOS (requires a profile to exist first)
+curl -X POST http://localhost:5000/api/alert/sos \
+  -H "Content-Type: application/json" \
+  -d '{"userId":"demo","type":"medical","latitude":19.0760,"longitude":72.8777}'
+
+# Health check
+curl http://localhost:5000/health
+```
 
 ---
 
 ## 📁 Project Structure
 
 ```
-rakshak-ai/
+Rakshak-AI/
 ├── backend/
-│   ├── config/          # Database, cache, firebase
-│   ├── models/          # Mongoose schemas
-│   ├── routes/          # API endpoints
-│   ├── services/        # Business logic
-│   ├── uploads/         # Media files
-│   ├── .env             # Environment variables
-│   └── server.js        # Entry point
+│   ├── config/          # DB, cache, Firebase
+│   ├── models/          # Alert, Profile, Responder, Media
+│   ├── routes/          # alert, profile, location, media, responder
+│   ├── services/        # SMS, location, responder, notification
+│   ├── dashboard/       # Responder web dashboard (HTML/CSS/JS)
+│   ├── uploads/         # Uploaded photos & prescriptions
+│   ├── Dockerfile
+│   └── server.js
 │
-├── mobile/
-│   ├── src/
-│   │   ├── config/      # Constants, network
-│   │   ├── screens/     # UI screens
-│   │   └── services/    # API, location, storage
-│   ├── App.js           # Root component
-│   └── index.js         # Entry point
+├── mobile-native/       # Bare React Native (Android + iOS)
+│   ├── android/
+│   ├── ios/
+│   └── src/
+│       ├── screens/     # Home, Map, Profile
+│       └── services/    # alert, location, socket, storage, SMS
 │
-└── Documentation/
-    ├── README.md        # This file
-    ├── QUICK_START.md   # Quick testing guide
-    ├── STATUS_SUMMARY.md # Status overview
-    ├── DEBUG_REPORT.md  # Technical analysis
-    └── SETUP_GUIDE.md   # Setup instructions
+├── render.yaml          # One-click Render.com deployment
+└── DEPLOY.md            # Step-by-step deployment guide
 ```
 
 ---
 
-## 🔧 Configuration
+## ☁️ Deployment
 
-### Backend Environment Variables
-```env
-PORT=5000
-MONGODB_URI=mongodb+srv://...  # Update this!
-TWILIO_ACCOUNT_SID=ACeafe...
-TWILIO_AUTH_TOKEN=09c7d5...
-TWILIO_PHONE_NUMBER=+17126241889
-```
+The backend is ready to deploy on [Render](https://render.com) (free tier) using the included `render.yaml`.
 
-### Mobile Network Configuration
-Edit `mobile/src/config/network.js` for physical device testing.
+See **[DEPLOY.md](./DEPLOY.md)** for the full step-by-step guide.
 
----
+**Environment variables needed on the server:**
 
-## 🚀 Deployment
-
-### Backend Deployment
-1. Update MongoDB URI to production cluster
-2. Configure environment variables
-3. Deploy to Heroku/AWS/Railway
-4. Set up HTTPS/SSL
-
-### Mobile Deployment
-1. Update production backend URL
-2. Test on physical devices
-3. Configure app signing
-4. Build release APK/IPA
-5. Submit to Play Store/App Store
+| Variable | Description |
+|----------|-------------|
+| `MONGODB_URI` | MongoDB Atlas connection string |
+| `TWILIO_ACCOUNT_SID` | Twilio account SID |
+| `TWILIO_AUTH_TOKEN` | Twilio auth token |
+| `TWILIO_PHONE_NUMBER` | Your Twilio number (E.164 format) |
+| `DASHBOARD_USER` | Dashboard login username |
+| `DASHBOARD_PASS` | Dashboard login password |
 
 ---
 
-## 🆘 Emergency Fallbacks
+## 🔒 Security Notes
 
-The app is designed with multiple safety nets:
-
-1. **No Internet** → Opens SMS app with pre-filled message
-2. **No MongoDB** → Uses local storage + in-memory cache
-3. **No Firebase** → SMS still works (no push notifications)
-4. **API Timeout** → Falls back to offline SMS mode
-
----
-
-## 📞 Support
-
-### Common Issues
-
-**"Network request failed"**
-- Check backend is running
-- Update network config for physical device
-- Check firewall settings
-
-**"Profile not found"**
-- MongoDB not connected (expected)
-- Profile saved locally still works
-
-**"SMS not sending"**
-- Verify Twilio credentials
-- Use E.164 phone format (+1234567890)
-
-**"Location permission denied"**
-- Settings → App → Permissions → Enable Location
-
-See `SETUP_GUIDE.md` for detailed troubleshooting.
+- Dashboard is protected by HTTP Basic Auth (configurable via env vars)
+- All SOS inputs are validated with `express-validator`
+- File uploads restricted to images and PDFs, 20MB max
+- CORS enabled for mobile app access
+- Secrets managed via environment variables — never committed
 
 ---
 
-## 🎯 Next Steps
+## 🗺️ Roadmap
 
-### Immediate (15 minutes)
-1. ✅ Test mobile app on emulator/device
-2. ✅ Fix MongoDB connection (optional)
-3. ✅ Verify SMS functionality
-
-### Optional (30 minutes)
-4. Configure Firebase push notifications
-5. Test media capture/upload
-6. Test all emergency types
-7. Test offline scenarios
+- [ ] Firebase Cloud Messaging push notifications
+- [ ] Cloudinary/S3 for persistent file storage
+- [ ] Rate limiting on SOS endpoint
+- [ ] Responder mobile app
+- [ ] Analytics dashboard
+- [ ] iOS build
 
 ---
 
-## 📊 Completion Status
+## 👤 Author
 
-| Component | Status | Completion |
-|-----------|--------|------------|
-| Backend Infrastructure | ✅ Working | 100% |
-| API Endpoints | ✅ Working | 100% |
-| Real-time Features | ✅ Working | 100% |
-| SMS Integration | ✅ Working | 100% |
-| Location Services | ✅ Working | 100% |
-| Database Connection | ⚠️ Needs Fix | 0% |
-| Mobile UI | ✅ Complete | 100% |
-| Mobile Services | ✅ Complete | 100% |
-| Error Handling | ✅ Complete | 100% |
-| Runtime Testing | ⏳ Pending | 0% |
-| **Overall** | **🟡 Ready** | **85%** |
+**Yash Limbhore**  
+Built during TechGeek Agentic AI Internship · May 2026
+
+[![GitHub](https://img.shields.io/badge/GitHub-Yash020605-181717?style=flat&logo=github)](https://github.com/Yash020605)
 
 ---
 
-## 🎉 Conclusion
-
-**Rakshak AI is 85% complete and ready for testing!**
-
-The core emergency alert functionality works:
-- ✅ SOS alerts trigger correctly
-- ✅ SMS messages send to emergency contacts
-- ✅ Location tracking is accurate
-- ✅ Map displays user location
-- ✅ Offline mode functions properly
-
-**You can start testing NOW!**
-
-Read `QUICK_START.md` to begin testing in 5 minutes.
-
----
-
-## 📄 License
-
-This project is part of TechGeek Agentic AI Internship.
-
----
-
-## 👥 Credits
-
-**Developed by:** Yash  
-**Debugged by:** Kiro AI  
-**Date:** May 19, 2026  
-**Status:** Production-Ready (with MongoDB connection)
-
----
-
-**🚨 EMERGENCY ALERT SYSTEM - SAVING LIVES THROUGH TECHNOLOGY 🚨**
+<div align="center">
+<strong>🚨 Built to save lives through technology 🚨</strong>
+</div>
