@@ -1,4 +1,5 @@
-export const API_BASE_URL = 'http://10.5.69.205:5000/api'; // WiFi IP of dev machine
+export const API_BASE_URL = 'https://rakshak-ai-a4f2.onrender.com/api';
+export const SOCKET_URL = 'https://rakshak-ai-a4f2.onrender.com';
 
 export const EMERGENCY_TYPES = {
   medical: {
