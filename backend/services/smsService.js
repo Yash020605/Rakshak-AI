@@ -1,9 +1,13 @@
 const twilio = require('twilio');
 
-const client = twilio(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-);
+// Lazy-initialize — only create the client when actually sending,
+// so missing Twilio env vars don't crash the server on startup.
+function getClient() {
+  if (!process.env.TWILIO_ACCOUNT_SID || !process.env.TWILIO_AUTH_TOKEN) {
+    throw new Error('Twilio credentials not configured (TWILIO_ACCOUNT_SID / TWILIO_AUTH_TOKEN missing)');
+  }
+  return twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+}
 
 const EMERGENCY_LABELS = {
   medical: '🚑 MEDICAL EMERGENCY',
@@ -38,6 +42,7 @@ async function sendSOSAlerts(alert, profile) {
   if (!contacts.length) return [];
 
   const message = buildSMSMessage(alert, profile);
+  const client = getClient();
 
   const results = await Promise.allSettled(
     contacts.map((contact) =>

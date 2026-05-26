@@ -109,6 +109,10 @@ router.post('/sms', async (req, res) => {
   const contacts = (profile.emergencyContacts || []).filter(c => c.phone);
   if (!contacts.length) return res.json({ success: true, sent: 0 });
 
+  if (!process.env.TWILIO_ACCOUNT_SID || !process.env.TWILIO_AUTH_TOKEN) {
+    return res.status(503).json({ error: 'Twilio not configured on this server' });
+  }
+
   const twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
   await Promise.allSettled(
     contacts.map((c) =>
