@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rakshak AI — Architecture Map</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', sans-serif; background: #0d1117; color: #e6edf3; min-height: 100vh; padding: 24px; }
+h1 { text-align: center; font-size: 28px; color: #f0f6fc; margin-bottom: 6px; }
+.subtitle { text-align: center; color: #8b949e; font-size: 14px; margin-bottom: 32px; }
+
+/* ── Layout ── */
+.arch { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; max-width: 1400px; margin: 0 auto; }
+.col-label { text-align: center; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #8b949e; margin-bottom: 10px; }
+
+/* ── Cards ── */
+.card { border-radius: 12px; padding: 16px; border: 1px solid; margin-bottom: 14px; }
+.card-title { font-size: 13px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.card-body { font-size: 12px; color: #c9d1d9; line-height: 1.7; }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; margin: 2px 2px 2px 0; }
+
+/* Mobile */
+.mobile { background: #161b22; border-color: #30363d; }
+.mobile .card-title { color: #58a6ff; }
+.tag-screen { background: #1f3a5f; color: #79c0ff; }
+.tag-service { background: #1a3a2a; color: #56d364; }
+
+/* Backend */
+.backend { background: #161b22; border-color: #30363d; }
+.backend .card-title { color: #f78166; }
+.tag-route { background: #3d1f1f; color: #ffa198; }
+.tag-model { background: #2d2a1f; color: #e3b341; }
+.tag-svc { background: #1f2d3d; color: #79c0ff; }
+
+/* External */
+.external { background: #161b22; border-color: #30363d; }
+.external .card-title { color: #bc8cff; }
+.tag-ext { background: #2d1f3d; color: #d2a8ff; }
+
+/* ── Flow section ── */
+.flow-section { max-width: 1400px; margin: 32px auto 0; }
+.flow-title { font-size: 18px; font-weight: 700; color: #f0f6fc; margin-bottom: 16px; text-align: center; }
+.flow-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.flow-card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 18px; }
+.flow-card h3 { font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+.step { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; font-size: 12px; color: #c9d1d9; line-height: 1.5; }
+.step-num { background: #21262d; border: 1px solid #30363d; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; color: #8b949e; }
+.arrow { color: #30363d; font-size: 18px; text-align: center; margin: 4px 0; }
+
+/* ── Data model section ── */
+.models-section { max-width: 1400px; margin: 32px auto 0; }
+.models-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.model-card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 16px; }
+.model-card h3 { font-size: 13px; font-weight: 700; color: #e3b341; margin-bottom: 10px; }
+.field { font-size: 11px; color: #8b949e; padding: 3px 0; border-bottom: 1px solid #21262d; display: flex; justify-content: space-between; }
+.field:last-child { border-bottom: none; }
+.field-type { color: #56d364; font-size: 10px; }
+
+/* ── Socket section ── */
+.socket-section { max-width: 1400px; margin: 32px auto 0; background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 20px; }
+.socket-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 14px; }
+.socket-event { background: #0d1117; border: 1px solid #21262d; border-radius: 8px; padding: 12px; }
+.socket-event .dir { font-size: 10px; font-weight: 700; letter-spacing: 1px; margin-bottom: 6px; }
+.emit { color: #56d364; }
+.listen { color: #79c0ff; }
+.socket-event .name { font-size: 11px; font-weight: 700; color: #f0f6fc; margin-bottom: 4px; font-family: monospace; }
+.socket-event .desc { font-size: 11px; color: #8b949e; line-height: 1.4; }
+
+/* ── Legend ── */
+.legend { max-width: 1400px; margin: 24px auto 0; display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #8b949e; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+</style>
+</head>
+<body>
+
+<h1>🛡️ Rakshak AI — System Architecture Map</h1>
+<p class="subtitle">Emergency Response Platform · React Native Mobile + Node.js Backend + Web Dashboard</p>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--  THREE-COLUMN ARCHITECTURE                                  -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="arch">
+
+  <!-- ── COLUMN 1: MOBILE APP ── -->
+  <div>
+    <div class="col-label">📱 Mobile App (React Native)</div>
+
+    <div class="card mobile">
+      <div class="card-title">🏠 HomeScreen.js</div>
+      <div class="card-body">
+        Entry point for the user. Shows three big SOS buttons.<br><br>
+        <span class="tag tag-screen">UI</span>
+        <span class="tag tag-screen">SOS Trigger</span><br><br>
+        • Requests location permission on load<br>
+        • Pre-fetches GPS for speed<br>
+        • Loads saved profile from AsyncStorage<br>
+        • On button tap → calls <code>triggerSOS(type, lat, lng)</code><br>
+        • Navigates to MapScreen with alertId
+      </div>
+    </div>
+
+    <div class="card mobile">
+      <div class="card-title">🗺️ MapScreen.js</div>
+      <div class="card-body">
+        Live map shown after SOS is sent.<br><br>
+        <span class="tag tag-screen">UI</span>
+        <span class="tag tag-screen">Real-time</span><br><br>
+        • OpenStreetMap tiles (no API key)<br>
+        • Tracks user GPS in real-time via watchLocation<br>
+        • Shows nearest emergency service marker<br>
+        • Listens on Socket.IO for dispatch status<br>
+        • Photo/Video capture &amp; upload to alert<br>
+        • Resolve button to close alert
+      </div>
+    </div>
+
+    <div class="card mobile">
+      <div class="card-title">👤 ProfileScreen.js</div>
+      <div class="card-body">
+        User medical profile setup.<br><br>
+        <span class="tag tag-screen">UI</span>
+        <span class="tag tag-screen">Form</span><br><br>
+        • Name, blood group, medical conditions<br>
+        • Up to 5 emergency contacts (name + phone)<br>
+        • Saves locally (AsyncStorage) + syncs to server<br>
+        • Profile used in every SOS alert
+      </div>
+    </div>
+
+    <div class="card mobile">
+      <div class="card-title">⚙️ Mobile Services</div>
+      <div class="card-body">
+        <span class="tag tag-service">alertService.js</span><br>
+        triggerSOS → POST /api/alert/sos<br>
+        Offline fallback → direct SMS via Twilio<br><br>
+        <span class="tag tag-service">locationService.js</span><br>
+        getCurrentLocation, watchLocation (GPS)<br><br>
+        <span class="tag tag-service">socketService.js</span><br>
+        Persistent Socket.IO connection to backend<br><br>
+        <span class="tag tag-service">mediaService.js</span><br>
+        Camera/video capture + upload to /api/media<br><br>
+        <span class="tag tag-service">storageService.js</span><br>
+        AsyncStorage read/write for profile<br><br>
+        <span class="tag tag-service">smsService.js</span><br>
+        Offline SMS fallback (react-native-send-intent)
+      </div>
+    </div>
+  </div>
+
+  <!-- ── COLUMN 2: BACKEND ── -->
+  <div>
+    <div class="col-label">🖥️ Backend (Node.js + Express)</div>
+
+    <div class="card backend">
+      <div class="card-title">🚀 server.js — Entry Point</div>
+      <div class="card-body">
+        Express + HTTP + Socket.IO server.<br><br>
+        <span class="tag tag-route">Port 5000</span>
+        <span class="tag tag-route">CORS *</span><br><br>
+        • Connects to MongoDB via Mongoose<br>
+        • Mounts all API routes under /api<br>
+        • Serves /dashboard (static HTML)<br>
+        • Serves /uploads (media files)<br>
+        • Socket.IO rooms: responder-dashboard, user:{id}
+      </div>
+    </div>
+
+    <div class="card backend">
+      <div class="card-title">🚨 routes/alert.js</div>
+      <div class="card-body">
+        <span class="tag tag-route">POST /sos</span>
+        <span class="tag tag-route">POST /sms</span>
+        <span class="tag tag-route">GET /:id</span>
+        <span class="tag tag-route">PATCH /:id/resolve</span>
+        <span class="tag tag-route">PATCH /:id/dispatch</span><br><br>
+        <b>Dual-Routing on SOS:</b><br>
+        → Family Route: SMS via Twilio to all contacts<br>
+        → Responder Route: find nearby responders (5km) + Socket.IO notify<br>
+        → Background: find nearest service via Overpass API<br>
+        → Dispatch: notifies victim + family + dashboard
+      </div>
+    </div>
+
+    <div class="card backend">
+      <div class="card-title">📍 routes/location.js</div>
+      <div class="card-body">
+        <span class="tag tag-route">POST /update</span>
+        <span class="tag tag-route">GET /live/:userId</span>
+        <span class="tag tag-route">GET /nearest</span>
+        <span class="tag tag-route">GET /route</span><br><br>
+        • Live location stored in node-cache (in-memory)<br>
+        • Nearest service via Overpass API (OSM)<br>
+        • Driving route via OSRM public API<br>
+        • Returns GeoJSON coordinates + ETA minutes
+      </div>
+    </div>
+
+    <div class="card backend">
+      <div class="card-title">👤 routes/profile.js</div>
+      <div class="card-body">
+        <span class="tag tag-route">GET /:userId</span>
+        <span class="tag tag-route">POST /</span>
+        <span class="tag tag-route">POST /:id/photo</span>
+        <span class="tag tag-route">POST /:id/prescription</span>
+        <span class="tag tag-route">DELETE /:id/prescription/:idx</span><br><br>
+        • Upsert profile (create or update)<br>
+        • Photo upload via Multer (20MB limit)<br>
+        • Prescription PDF/image upload<br>
+        • Stored in /uploads folder
+      </div>
+    </div>
+
+    <div class="card backend">
+      <div class="card-title">📁 routes/media.js</div>
+      <div class="card-body">
+        <span class="tag tag-route">POST /upload</span><br><br>
+        • Multer disk storage (50MB limit)<br>
+        • Accepts: jpg, png, mp4, mov, mp3, aac, wav<br>
+        • Saves to /uploads with unique filename<br>
+        • Links media URL to Alert document
+      </div>
+    </div>
+
+    <div class="card backend">
+      <div class="card-title">🧑‍🚒 routes/responder.js</div>
+      <div class="card-body">
+        <span class="tag tag-route">GET /</span>
+        <span class="tag tag-route">GET /alerts/active</span>
+        <span class="tag tag-route">POST /</span>
+        <span class="tag tag-route">PATCH /:id/status</span>
+        <span class="tag tag-route">DELETE /:id</span><br><br>
+        • Register/manage responders<br>
+        • Active alerts feed for dashboard<br>
+        • Status: active / busy / offline
+      </div>
+    </div>
+
+    <div class="card backend">
+      <div class="card-title">🔧 Backend Services</div>
+      <div class="card-body">
+        <span class="tag tag-svc">locationService.js</span><br>
+        Overpass API query (OSM) · Haversine distance · Nominatim reverse geocode<br><br>
+        <span class="tag tag-svc">responderService.js</span><br>
+        findNearbyResponders (Haversine filter) · notifyResponders via Socket.IO<br><br>
+        <span class="tag tag-svc">smsService.js</span><br>
+        Twilio SMS · builds emergency message with maps link<br><br>
+        <span class="tag tag-svc">notificationService.js</span><br>
+        Firebase FCM push notifications (Android/iOS)
+      </div>
+    </div>
+  </div>
+
+  <!-- ── COLUMN 3: DASHBOARD + EXTERNAL ── -->
+  <div>
+    <div class="col-label">🖥️ Web Dashboard + External Services</div>
+
+    <div class="card external">
+      <div class="card-title">📊 dashboard/app.js (Responder Dashboard)</div>
+      <div class="card-body">
+        Browser-based responder control panel.<br><br>
+        <span class="tag tag-ext">Leaflet.js Map</span>
+        <span class="tag tag-ext">Socket.IO Client</span><br><br>
+        • Connects to backend via Socket.IO<br>
+        • Joins <code>responder-dashboard</code> room<br>
+        • Loads active/dispatched alerts on load<br>
+        • Real-time new-alert notifications (sound + browser notif)<br>
+        • Map markers per alert type (🚑🔥🚓)<br>
+        • Alert detail modal: patient info, photo, prescriptions<br>
+        • Dispatch button → PATCH /api/alert/:id/dispatch<br>
+        • Live responder GPS tracking (browser geolocation)<br>
+        • Draws OSRM route on map with ETA<br>
+        • Streams responder location to victim via Socket.IO<br>
+        • Auto-refresh every 30 seconds
+      </div>
+    </div>
+
+    <div class="card external">
+      <div class="card-title">🌐 External APIs</div>
+      <div class="card-body">
+        <span class="tag tag-ext">Twilio</span><br>
+        SMS to emergency contacts on SOS<br>
+        Env: TWILIO_ACCOUNT_SID, AUTH_TOKEN, PHONE_NUMBER<br><br>
+        <span class="tag tag-ext">Overpass API (OSM)</span><br>
+        Finds nearest hospital / fire station / police within 5km<br>
+        Free · No API key required<br><br>
+        <span class="tag tag-ext">OSRM Router</span><br>
+        Driving route + ETA between two coordinates<br>
+        Free public demo server · No API key<br><br>
+        <span class="tag tag-ext">Nominatim (OSM)</span><br>
+        Reverse geocoding (lat/lng → address)<br>
+        Free · No API key<br><br>
+        <span class="tag tag-ext">Firebase FCM</span><br>
+        Push notifications to mobile devices<br>
+        Env: Firebase service account JSON
+      </div>
+    </div>
+
+    <div class="card external">
+      <div class="card-title">🗄️ Infrastructure</div>
+      <div class="card-body">
+        <span class="tag tag-ext">MongoDB (Mongoose)</span><br>
+        Collections: Alert, Profile, Responder, Media<br>
+        Env: MONGODB_URI<br><br>
+        <span class="tag tag-ext">node-cache</span><br>
+        In-memory live location store (key: live:{userId})<br>
+        No Redis needed for MVP<br><br>
+        <span class="tag tag-ext">Multer</span><br>
+        Local disk storage in /uploads<br>
+        Serves as static files via Express<br><br>
+        <span class="tag tag-ext">Socket.IO</span><br>
+        Real-time bidirectional events<br>
+        Rooms: responder-dashboard, user:{userId}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--  SOS FLOW                                                   -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="flow-section">
+  <div class="flow-title">⚡ SOS Alert Flow — Step by Step</div>
+  <div class="flow-grid">
+
+    <div class="flow-card">
+      <h3 style="color:#58a6ff;">📱 User Triggers SOS</h3>
+      <div class="step"><div class="step-num">1</div><div>User taps Medical / Fire / Police button on HomeScreen</div></div>
+      <div class="step"><div class="step-num">2</div><div>App vibrates, gets GPS coordinates (pre-fetched for speed)</div></div>
+      <div class="step"><div class="step-num">3</div><div>alertService.js checks network (NetInfo)</div></div>
+      <div class="step"><div class="step-num">4</div><div><b>Online:</b> POST /api/alert/sos with userId, type, lat, lng</div></div>
+      <div class="step"><div class="step-num">5</div><div><b>Offline fallback:</b> Direct SMS via react-native-send-intent</div></div>
+      <div class="step"><div class="step-num">6</div><div>Navigate to MapScreen with alertId + nearestService</div></div>
+    </div>
+
+    <div class="flow-card">
+      <h3 style="color:#f78166;">🖥️ Backend Processes SOS (Dual-Routing)</h3>
+      <div class="step"><div class="step-num">1</div><div>Validate request (express-validator)</div></div>
+      <div class="step"><div class="step-num">2</div><div>Fetch user Profile from MongoDB (name, blood group, contacts)</div></div>
+      <div class="step"><div class="step-num">3</div><div>Create Alert document in MongoDB (status: active)</div></div>
+      <div class="step"><div class="step-num">4</div><div>Cache live location in node-cache</div></div>
+      <div class="step"><div class="step-num">5</div><div>Respond immediately to mobile (alertId returned)</div></div>
+      <div class="step"><div class="step-num">6</div><div><b>Route A:</b> Twilio SMS to all emergency contacts</div></div>
+      <div class="step"><div class="step-num">7</div><div><b>Route B:</b> Find responders within 5km → Socket.IO notify dashboard</div></div>
+      <div class="step"><div class="step-num">8</div><div><b>Background:</b> Overpass API → nearest hospital/station → emit to mobile</div></div>
+    </div>
+
+    <div class="flow-card">
+      <h3 style="color:#bc8cff;">📊 Responder Dashboard Receives Alert</h3>
+      <div class="step"><div class="step-num">1</div><div>Socket.IO <code>new-alert</code> event received in browser</div></div>
+      <div class="step"><div class="step-num">2</div><div>Alert card appears in sidebar, map marker added, alert sound plays</div></div>
+      <div class="step"><div class="step-num">3</div><div>Browser notification shown (if permission granted)</div></div>
+      <div class="step"><div class="step-num">4</div><div>Responder clicks alert → modal shows patient photo, blood group, prescriptions</div></div>
+      <div class="step"><div class="step-num">5</div><div>Responder clicks "Accept &amp; Dispatch" → enters name/unit</div></div>
+      <div class="step"><div class="step-num">6</div><div>PATCH /api/alert/:id/dispatch → alert status → dispatched</div></div>
+    </div>
+
+    <div class="flow-card">
+      <h3 style="color:#56d364;">🚑 Live Tracking After Dispatch</h3>
+      <div class="step"><div class="step-num">1</div><div>Backend emits <code>alert-dispatched:{userId}</code> to victim's Socket.IO room</div></div>
+      <div class="step"><div class="step-num">2</div><div>Mobile MapScreen shows "Help is on the way" banner</div></div>
+      <div class="step"><div class="step-num">3</div><div>Dashboard starts browser geolocation watch (GPS)</div></div>
+      <div class="step"><div class="step-num">4</div><div>Every ~3s: responder GPS → OSRM route API → draw polyline on map</div></div>
+      <div class="step"><div class="step-num">5</div><div>Socket.IO <code>responder-location</code> event → relayed to victim's room</div></div>
+      <div class="step"><div class="step-num">6</div><div>ETA displayed on dashboard modal (distance + minutes)</div></div>
+      <div class="step"><div class="step-num">7</div><div>Victim taps "Resolved" → PATCH /api/alert/:id/resolve → status: resolved</div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--  DATA MODELS                                                -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="models-section">
+  <div class="flow-title" style="margin-top:32px;">🗄️ MongoDB Data Models</div>
+  <div class="models-grid">
+
+    <div class="model-card">
+      <h3>Alert</h3>
+      <div class="field"><span>userId</span><span class="field-type">String (indexed)</span></div>
+      <div class="field"><span>type</span><span class="field-type">medical | fire | police</span></div>
+      <div class="field"><span>latitude / longitude</span><span class="field-type">Number</span></div>
+      <div class="field"><span>status</span><span class="field-type">active | dispatched | resolved</span></div>
+      <div class="field"><span>mediaUrls</span><span class="field-type">[String]</span></div>
+      <div class="field"><span>responderId / responderName</span><span class="field-type">String</span></div>
+      <div class="field"><span>dispatchedAt</span><span class="field-type">Date</span></div>
+      <div class="field"><span>userName / bloodGroup</span><span class="field-type">String (snapshot)</span></div>
+      <div class="field"><span>medicalConditions</span><span class="field-type">String</span></div>
+      <div class="field"><span>photoUrl</span><span class="field-type">String</span></div>
+      <div class="field"><span>prescriptions</span><span class="field-type">[{name, url}]</span></div>
+      <div class="field"><span>createdAt / updatedAt</span><span class="field-type">Date (auto)</span></div>
+    </div>
+
+    <div class="model-card">
+      <h3>Profile</h3>
+      <div class="field"><span>userId</span><span class="field-type">String (unique, indexed)</span></div>
+      <div class="field"><span>name</span><span class="field-type">String (required)</span></div>
+      <div class="field"><span>bloodGroup</span><span class="field-type">String</span></div>
+      <div class="field"><span>medicalConditions</span><span class="field-type">String</span></div>
+      <div class="field"><span>allergies / medications</span><span class="field-type">String</span></div>
+      <div class="field"><span>address</span><span class="field-type">String</span></div>
+      <div class="field"><span>emergencyContacts</span><span class="field-type">[{name, phone}]</span></div>
+      <div class="field"><span>photoUrl</span><span class="field-type">String</span></div>
+      <div class="field"><span>prescriptions</span><span class="field-type">[{name, url, uploadedAt}]</span></div>
+      <div class="field"><span>createdAt / updatedAt</span><span class="field-type">Date (auto)</span></div>
+    </div>
+
+    <div class="model-card">
+      <h3>Responder</h3>
+      <div class="field"><span>name</span><span class="field-type">String (required)</span></div>
+      <div class="field"><span>type</span><span class="field-type">medical | fire | police | all</span></div>
+      <div class="field"><span>latitude / longitude</span><span class="field-type">Number (indexed)</span></div>
+      <div class="field"><span>status</span><span class="field-type">active | busy | offline</span></div>
+      <div class="field"><span>phone / email</span><span class="field-type">String</span></div>
+      <div class="field"><span>organization</span><span class="field-type">String</span></div>
+      <div class="field"><span>socketId</span><span class="field-type">String (live WS ID)</span></div>
+      <div class="field"><span>lastActive</span><span class="field-type">Date</span></div>
+      <div class="field"><span>activeAlerts</span><span class="field-type">[ObjectId → Alert]</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--  SOCKET.IO EVENTS                                           -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="socket-section">
+  <div class="flow-title">🔌 Socket.IO Real-Time Events</div>
+  <div class="socket-grid">
+
+    <div class="socket-event">
+      <div class="dir emit">↑ CLIENT EMITS</div>
+      <div class="name">join-responder-dashboard</div>
+      <div class="desc">Dashboard joins responder room. Updates responder socketId in DB.</div>
+    </div>
+
+    <div class="socket-event">
+      <div class="dir emit">↑ CLIENT EMITS</div>
+      <div class="name">join-user-channel</div>
+      <div class="desc">Mobile app joins personal room user:{userId} to receive dispatch updates.</div>
+    </div>
+
+    <div class="socket-event">
+      <div class="dir emit">↑ CLIENT EMITS</div>
+      <div class="name">responder-location</div>
+      <div class="desc">Dashboard streams GPS {alertId, userId, lat, lng, eta} → relayed to victim's room.</div>
+    </div>
+
+    <div class="socket-event">
+      <div class="dir listen">↓ SERVER EMITS</div>
+      <div class="name">new-alert</div>
+      <div class="desc">Broadcast to responder-dashboard room when SOS is triggered.</div>
+    </div>
+
+    <div class="socket-event">
+      <div class="dir listen">↓ SERVER EMITS</div>
+      <div class="name">alert-dispatched:{userId}</div>
+      <div class="desc">Sent to victim's room when responder accepts. Mobile shows "Help is on the way".</div>
+    </div>
+
+    <div class="socket-event">
+      <div class="dir listen">↓ SERVER EMITS</div>
+      <div class="name">alert-dispatched:{alertId}</div>
+      <div class="desc">Also emitted by alertId so MapScreen can listen by alertId.</div>
+    </div>
+
+    <div class="socket-event">
+      <div class="dir listen">↓ SERVER EMITS</div>
+      <div class="name">responder-location:{alertId}</div>
+      <div class="desc">Relayed to victim's room. Mobile MapScreen shows moving responder marker.</div>
+    </div>
+
+    <div class="socket-event">
+      <div class="dir listen">↓ SERVER EMITS</div>
+      <div class="name">nearest:{userId}</div>
+      <div class="desc">Sent after Overpass API resolves nearest hospital/station. Mobile updates map.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--  LEGEND                                                     -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#58a6ff"></div> Mobile App (React Native)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f78166"></div> Backend API (Express)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#bc8cff"></div> Web Dashboard (Leaflet)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#e3b341"></div> MongoDB Models</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#56d364"></div> External Services (Twilio, OSM, Firebase)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#79c0ff"></div> Socket.IO Real-time</div>
+</div>
+
+<p style="text-align:center;color:#484f58;font-size:11px;margin-top:24px;padding-bottom:24px;">
+  Generated by Kiro · Rakshak AI Emergency Response Platform
+</p>
+
+</body>
+</html>
