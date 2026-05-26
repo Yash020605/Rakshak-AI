@@ -1,0 +1,54 @@
+{
+  "expo": {
+    "name": "Rakshak AI",
+    "slug": "rakshak-ai",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0d0d0d"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0d0d0d"
+      },
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "CAMERA",
+        "READ_MEDIA_IMAGES",
+        "READ_MEDIA_VIDEO",
+        "VIBRATE",
+        "CALL_PHONE",
+        "SEND_SMS"
+      ]
+    },
+    "ios": {
+      "supportsTablet": false,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Rakshak AI needs your location to send SOS alerts.",
+        "NSCameraUsageDescription": "Rakshak AI needs camera access to capture evidence.",
+        "NSPhotoLibraryUsageDescription": "Rakshak AI needs photo access to upload prescriptions."
+      }
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Rakshak AI needs your location to send SOS alerts."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Rakshak AI needs photo access to upload prescriptions.",
+          "cameraPermission": "Rakshak AI needs camera access to capture evidence."
+        }
+      ]
+    ]
+  }
+}
