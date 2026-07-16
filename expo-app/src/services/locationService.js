@@ -10,17 +10,30 @@ export async function getCurrentLocation() {
   if (status !== 'granted') {
     await Location.requestForegroundPermissionsAsync();
   }
-  const pos = await Location.getCurrentPositionAsync({
-    accuracy: Location.Accuracy.Balanced,
-    timeInterval: 5000,
-  });
+  
+  let pos = await Location.getLastKnownPositionAsync({});
+  try {
+    const currentPos = await Location.getCurrentPositionAsync({
+      accuracy: Location.Accuracy.Highest,
+    });
+    if (currentPos) pos = currentPos;
+  } catch (error) {
+    console.warn("Failed to get highest accuracy position:", error);
+  }
+
+  if (!pos) {
+    pos = await Location.getCurrentPositionAsync({
+      accuracy: Location.Accuracy.Balanced,
+    });
+  }
+
   return { latitude: pos.coords.latitude, longitude: pos.coords.longitude };
 }
 
 export function watchLocation(callback) {
   let sub = null;
   Location.watchPositionAsync(
-    { accuracy: Location.Accuracy.Balanced, timeInterval: 3000, distanceInterval: 5 },
+    { accuracy: Location.Accuracy.Highest, timeInterval: 3000, distanceInterval: 2 },
     (pos) => callback({ latitude: pos.coords.latitude, longitude: pos.coords.longitude })
   ).then((s) => { sub = s; });
   // Return a fake watchId object — clearWatch will call sub.remove()

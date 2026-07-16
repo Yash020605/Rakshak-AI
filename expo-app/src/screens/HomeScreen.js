@@ -3,6 +3,7 @@ import {
   View, Text, StyleSheet, TouchableOpacity,
   StatusBar, Vibration, ScrollView, Animated,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { getCurrentLocation, requestLocationPermission } from '../services/locationService';
 import { triggerSOS } from '../services/alertService';
 import { getProfile } from '../services/storageService';
@@ -29,14 +30,21 @@ export default function HomeScreen({ navigation }) {
 
     (async () => {
       await requestLocationPermission();
-      const p = await getProfile();
-      setProfile(p);
       try {
         locationRef.current = await getCurrentLocation();
         setLocationReady(true);
       } catch (_) {}
     })();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      (async () => {
+        const p = await getProfile();
+        setProfile(p);
+      })();
+    }, [])
+  );
 
   const handleSOS = (item) => {
     if (!profile) { navigation.navigate('Profile'); return; }

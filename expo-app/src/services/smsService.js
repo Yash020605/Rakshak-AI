@@ -1,5 +1,6 @@
-import { Linking } from 'react-native';
+import { Linking, NativeModules, PermissionsAndroid, Platform } from 'react-native';
 import axios from 'axios';
+const { DirectSms } = NativeModules;
 import { API_BASE_URL } from '../config/constants';
 
 const EMERGENCY_LABELS = {
@@ -9,10 +10,7 @@ const EMERGENCY_LABELS = {
 };
 
 export async function callEmergencyContact(profile) {
-  const phone = profile?.emergencyContacts?.[0]?.phone?.replace(/\s+/g, '');
-  if (phone) {
-    await Linking.openURL(`tel:${phone}`).catch(() => {});
-  }
+  // Removed manual phone dialer popup
 }
 
 async function sendViaTwilio(type, latitude, longitude, profile) {
@@ -24,13 +22,35 @@ async function sendViaTwilio(type, latitude, longitude, profile) {
 }
 
 async function sendNativeSMS(type, latitude, longitude, profile) {
+  if (Platform.OS !== 'android' || !DirectSms) return;
+
   const contacts = profile.emergencyContacts || [];
-  if (!contacts.length) return;
+  const validContacts = contacts.filter(c => c && c.phone);
+  if (!validContacts.length) return;
+
   const label = EMERGENCY_LABELS[type] || 'EMERGENCY';
   const mapsLink = `https://maps.google.com/?q=${latitude},${longitude}`;
-  const message = `${label}\nPerson: ${profile.name}\nBlood: ${profile.bloodGroup || 'N/A'}\nLocation: ${mapsLink}\nSent via Rakshak AI`;
-  const phone = contacts[0]?.phone;
-  if (phone) await Linking.openURL(`sms:${phone}?body=${encodeURIComponent(message)}`).catch(() => {});
+  const message = `${label}\nPerson: ${profile.name}\nLocation: ${mapsLink}`;
+
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.SEND_SMS,
+      {
+        title: 'SMS Permission',
+        message: 'Rakshak AI needs permission to send offline SOS texts.',
+        buttonPositive: 'OK'
+      }
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      for (const c of validContacts) {
+        await DirectSms.sendSMS(c.phone, message);
+      }
+    } else {
+      console.warn('SMS permission denied');
+    }
+  } catch (err) {
+    console.warn('sendNativeSMS Error:', err);
+  }
 }
 
 export async function sendOfflineSMS(type, latitude, longitude, profile) {

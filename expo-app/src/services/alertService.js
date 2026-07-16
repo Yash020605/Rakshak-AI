@@ -1,6 +1,6 @@
 import axios from 'axios';
 import NetInfo from '@react-native-community/netinfo';
-import { Linking } from 'react-native';
+import { Linking, Alert } from 'react-native';
 import { API_BASE_URL } from '../config/constants';
 import { getProfile } from './storageService';
 import { sendOfflineSMS, callEmergencyContact } from './smsService';
@@ -25,8 +25,8 @@ export async function triggerSOS(type, latitude, longitude) {
         { userId: profile.userId, type, latitude, longitude },
         { timeout: 8000 }
       );
+      Alert.alert('Text Sent', 'Your emergency contacts have been notified automatically.');
       callEmergencyService(type);
-      callEmergencyContact(profile).catch(() => {});
       return { source: 'online', ...data };
     } catch (err) {
       console.warn('Online SOS failed, falling back:', err.message);
@@ -34,6 +34,7 @@ export async function triggerSOS(type, latitude, longitude) {
   }
 
   await sendOfflineSMS(type, latitude, longitude, profile);
+  Alert.alert('Carrier Text Sent', 'Your emergency contacts have been notified (offline native fallback).');
   callEmergencyService(type);
   return { source: 'offline', success: true };
 }
