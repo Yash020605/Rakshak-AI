@@ -39,17 +39,18 @@ function buildSMSMessage(alert, profile) {
  */
 async function sendSOSAlerts(alert, profile) {
   const contacts = profile.emergencyContacts || [];
-  if (!contacts.length) return [];
+  const validContacts = contacts.filter(c => c && c.phone);
+  if (!validContacts.length) return [];
 
   const message = buildSMSMessage(alert, profile);
   const client = getClient();
 
   const results = await Promise.allSettled(
-    contacts.map((contact) =>
+    validContacts.map((contact) =>
       client.messages.create({
         body: message,
         from: process.env.TWILIO_PHONE_NUMBER,
-        to: contact.phone.startsWith('+') ? contact.phone : `+91${contact.phone.replace(/\D/g, '')}`,
+        to: contact.phone.toString().startsWith('+') ? contact.phone : `+91${contact.phone.toString().replace(/\D/g, '')}`,
       })
     )
   );
