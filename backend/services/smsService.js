@@ -49,7 +49,7 @@ async function sendSOSAlerts(alert, profile) {
       client.messages.create({
         body: message,
         from: process.env.TWILIO_PHONE_NUMBER,
-        to: contact.phone,
+        to: contact.phone.startsWith('+') ? contact.phone : `+91${contact.phone.replace(/\D/g, '')}`,
       })
     )
   );
